@@ -1,0 +1,64 @@
+name: Check Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Beeper4LightOS
+        uses: actions/checkout@v4
+        with:
+          path: Beeper4LightOS
+
+      - name: Checkout Light SDK
+        uses: actions/checkout@v4
+        with:
+          repository: lightphone/light-sdk
+          path: light-sdk
+          ref: v0.0.11
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Generate local.properties
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > Beeper4LightOS/local.properties
+          echo "gpr.user=${{ secrets.GH_PACKAGES_USER || github.actor }}" >> Beeper4LightOS/local.properties
+          echo "gpr.key=${{ secrets.GH_PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}" >> Beeper4LightOS/local.properties
+          echo "sdk.dir=$ANDROID_HOME" > light-sdk/local.properties
+          echo "gpr.user=${{ secrets.GH_PACKAGES_USER || github.actor }}" >> light-sdk/local.properties
+          echo "gpr.key=${{ secrets.GH_PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}" >> light-sdk/local.properties
+
+      - name: Patch Light SDK ALLOWED_DEPENDENCIES
+        run: |
+          PLUGIN_FILE="light-sdk/plugin/src/main/kotlin/com/thelightphone/plugin/LightSdkPlugin.kt"
+          sed -i 's/"io.github.david-allison:anki-android-backend",/"io.github.david-allison:anki-android-backend",\n            "net.folivo",\n            "io.insert-koin",\n            "io.github.oshai",\n            "net.java.dev.jna",\n            "org.jetbrains.kotlinx:kotlinx-datetime",\n            "com.thelightphone",/' "$PLUGIN_FILE"
+
+      - name: Build with Gradle
+        run: |
+          cd Beeper4LightOS
+          ./gradlew assembleDebug
+
+      - name: Verify APK Generation
+        run: |
+          if [ -z "$(find Beeper4LightOS/app/build/outputs/apk/debug -name '*.apk' 2>/dev/null)" ]; then
+            echo "Error: APK file was not generated successfully."
+            exit 1
+          else
+            echo "Success: APK package generated successfully."
+            ls -lh Beeper4LightOS/app/build/outputs/apk/debug/*.apk
+          fi

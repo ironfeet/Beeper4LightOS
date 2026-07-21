@@ -2,3 +2,7 @@ name: "Beeper4LightOS CodeQL config"
 
 paths-ignore:
   - 'light-sdk/**'
+
+query-filters:
+  - exclude:
+      id: java/field-masks-super-field

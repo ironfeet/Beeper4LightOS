@@ -285,7 +285,8 @@ private fun MatrixAudioPlayer(
                     val byteList = mutableListOf<Byte>()
                     mediaData.collect { byteList.addAll(it.toList()) }
                     val bytes = byteList.toByteArray()
-                    val tmp = java.io.File.createTempFile("beeper_audio_", ".tmp")
+                    val tmpPath = java.nio.file.Files.createTempFile("beeper_audio_", ".tmp")
+                    val tmp = tmpPath.toFile()
                     tmp.writeBytes(bytes)
                     localFile = tmp
                     mediaPlayer.setDataSource(tmp.absolutePath)

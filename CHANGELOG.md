@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **BuildConfig Integration:** Configured `buildConfig` to dynamically inject the app version to bypass Light SDK's static analysis restrictions on Android framework classes.
 - **CI Hardening:** Configured CodeQL to explicitly exclude the `light-sdk` submodule from its analysis, ensuring alerts only flag the Beeper4LightOS codebase.
 
+### Fixed
+- **Security:** Resolved a local information disclosure vulnerability by enforcing strict POSIX file permissions when creating temporary audio playback files.
+
 ## [0.0.1] - 2026-07-20
 
 ### Added

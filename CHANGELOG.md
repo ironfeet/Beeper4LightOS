@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - **Security:** Resolved a local information disclosure vulnerability by enforcing strict POSIX file permissions when creating temporary audio playback files.
+- **CI/CD:** Fixed the GitHub Actions release workflow so that it correctly locates the `CHANGELOG.md` file when extracting release notes.
 
 ## [0.0.1] - 2026-07-20
 

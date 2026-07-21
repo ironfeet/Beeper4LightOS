@@ -494,6 +494,25 @@ class BeeperChatListScreen(private val sealedActivity: SealedLightActivity) :
                         }
                     }
                 } // End LightScrollView
+                
+                // Version label
+                val versionName = androidx.compose.runtime.remember {
+                    try {
+                        me.ironfeet.beeper4lightos.BuildConfig.VERSION_NAME
+                    } catch (e: Exception) {
+                        "Unknown"
+                    }
+                }
+                Box(
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 0.5f.gridUnitsAsDp()),
+                    contentAlignment = Alignment.Center
+                ) {
+                    LightText(
+                        text = "v$versionName",
+                        variant = LightTextVariant.Fine,
+                        lighten = true
+                    )
+                }
                 } // End outer Column
 
                 if (showLogoutConfirmation) {

@@ -64,6 +64,8 @@ jobs:
       - name: Extract release notes
         id: extract_notes
         uses: ffurrer2/extract-release-notes@v2
+        with:
+          changelog_file: Beeper4LightOS/CHANGELOG.md
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

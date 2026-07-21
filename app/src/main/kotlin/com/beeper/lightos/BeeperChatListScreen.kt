@@ -509,7 +509,7 @@ class BeeperChatListScreen(private val sealedActivity: SealedLightActivity) :
                 ) {
                     LightText(
                         text = "v$versionName",
-                        variant = LightTextVariant.Fine,
+                        variant = LightTextVariant.Micro,
                         lighten = true
                     )
                 }

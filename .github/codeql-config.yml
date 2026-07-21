@@ -1,0 +1,4 @@
+name: "Beeper4LightOS CodeQL config"
+
+paths-ignore:
+  - 'light-sdk/**'

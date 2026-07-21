@@ -53,6 +53,7 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           queries: security-extended,security-and-quality
+          config-file: ./Beeper4LightOS/.github/codeql-config.yml
 
       - name: Generate local.properties
         run: |

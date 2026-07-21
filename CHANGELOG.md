@@ -14,7 +14,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - **Security:** Resolved a local information disclosure vulnerability by enforcing strict POSIX file permissions when creating temporary audio playback files.
-- **Security (CI):** Fixed a false positive CodeQL alert related to Jetpack Compose's `$stable` compiler-generated field by suppressing the rule.
 
 ## [0.0.1] - 2026-07-20
 

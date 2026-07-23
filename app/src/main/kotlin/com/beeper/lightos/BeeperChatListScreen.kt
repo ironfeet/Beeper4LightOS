@@ -367,6 +367,7 @@ class BeeperChatListScreen(private val sealedActivity: SealedLightActivity) :
         val isVerified  by viewModel.isVerified.collectAsState()
 
         var showLogoutConfirmation by remember { mutableStateOf(false) }
+        var showMenu by remember { mutableStateOf(false) }
         
         val permissionLauncher = rememberPermissionRequestLauncher(Manifest.permission.POST_NOTIFICATIONS)
         androidx.compose.runtime.LaunchedEffect(Unit) {
@@ -383,12 +384,11 @@ class BeeperChatListScreen(private val sealedActivity: SealedLightActivity) :
                     modifier = Modifier.fillMaxSize(),
                 ) {
                 LightTopBar(
-                    leftButton  = null,
-                    center      = LightTopBarCenter.Text("Chats"),
-                    rightButton = LightBarButton.Text("Logout", onClick = {
-                        showLogoutConfirmation = true
+                    leftButton  = LightBarButton.Text("☰", onClick = {
+                        showMenu = true
                     }),
-                    modifier    = Modifier.padding(bottom = 1f.gridUnitsAsDp()),
+                    center      = LightTopBarCenter.Text("Chats"),
+                    rightButton = null,
                 )
 
                 // Key Backup debug logging (kept from original)
@@ -430,12 +430,13 @@ class BeeperChatListScreen(private val sealedActivity: SealedLightActivity) :
                         .fillMaxWidth()
                         .padding(start = 1f.gridUnitsAsDp()),
                 ) {
-                    rooms.forEach { room ->
+                    rooms.forEachIndexed { index, room ->
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(
-                                    vertical = 0.75f.gridUnitsAsDp(),
+                                    top = if (index == 0) 0f.gridUnitsAsDp() else 0.75f.gridUnitsAsDp(),
+                                    bottom = 0.75f.gridUnitsAsDp()
                                     // leave a right margin for the timestamp/badge
                                 )
                                 .lightClickable {
@@ -495,25 +496,67 @@ class BeeperChatListScreen(private val sealedActivity: SealedLightActivity) :
                     }
                 } // End LightScrollView
                 
-                // Version label
-                val versionName = androidx.compose.runtime.remember {
-                    try {
-                        me.ironfeet.beeper4lightos.BuildConfig.VERSION_NAME
-                    } catch (e: Exception) {
-                        "Unknown"
+
+                } // End outer Column
+
+                if (showMenu) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(LightThemeTokens.colors.background)
+                            .lightClickable { }, // Catch background clicks
+                    ) {
+                        Column(
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            LightTopBar(
+                                leftButton  = null,
+                                center      = LightTopBarCenter.Text("Menu"),
+                                rightButton = LightBarButton.Text("Close", onClick = {
+                                    showMenu = false
+                                }),
+                                modifier    = Modifier.padding(bottom = 1f.gridUnitsAsDp()),
+                            )
+                            
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        horizontal = 1f.gridUnitsAsDp(),
+                                        vertical = 0.75f.gridUnitsAsDp()
+                                    )
+                                    .lightClickable { 
+                                        showMenu = false
+                                        showLogoutConfirmation = true
+                                    },
+                                contentAlignment = Alignment.CenterStart
+                            ) {
+                                LightText("Logout", variant = LightTextVariant.Copy)
+                            }
+                            
+                            androidx.compose.foundation.layout.Spacer(modifier = Modifier.weight(1f))
+                            
+                            // Version label
+                            val versionName = androidx.compose.runtime.remember {
+                                try {
+                                    me.ironfeet.beeper4lightos.BuildConfig.VERSION_NAME
+                                } catch (e: Exception) {
+                                    "Unknown"
+                                }
+                            }
+                            Box(
+                                modifier = Modifier.fillMaxWidth().padding(bottom = 0.5f.gridUnitsAsDp()),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                LightText(
+                                    text = "v$versionName",
+                                    variant = LightTextVariant.Fine,
+                                    lighten = true
+                                )
+                            }
+                        }
                     }
                 }
-                Box(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 0.5f.gridUnitsAsDp()),
-                    contentAlignment = Alignment.Center
-                ) {
-                    LightText(
-                        text = "v$versionName",
-                        variant = LightTextVariant.Micro,
-                        lighten = true
-                    )
-                }
-                } // End outer Column
 
                 if (showLogoutConfirmation) {
                     Box(

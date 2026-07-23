@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.TransformOrigin
@@ -1018,7 +1019,7 @@ class BeeperChatRoomScreen(
                 if (isEditingMessage) {
 
                     val editorKey = remember(roomId) { "chat_input_$roomId" }
-                    LightTextInputEditor(
+                    BeeperTextInputEditor(
                         title            = "Message",
                         state            = textFieldState,
                         keyboardOptionsFlow = keyboardOptionsFlow,
@@ -1034,7 +1035,7 @@ class BeeperChatRoomScreen(
                             }
                         },
                         onBack  = { isEditingMessage = false },
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize().imePadding()
                     )
                     return@Box
                 }

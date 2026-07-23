@@ -13,7 +13,7 @@ android {
     defaultConfig {
         minSdk = 33
         targetSdk = 36
-        manifestPlaceholders["sdkVersion"] = "0.0.2"
+        manifestPlaceholders["sdkVersion"] = "0.0.3"
     }
 
     buildFeatures {
@@ -73,6 +73,8 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")
 
     testImplementation(libs.kotlin.test)
 }
